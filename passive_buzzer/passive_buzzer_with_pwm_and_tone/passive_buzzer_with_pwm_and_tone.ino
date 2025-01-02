@@ -15,11 +15,9 @@ const int SI = 496;
 
 const int SHORT = 250;
 
-void playNote(int val) {
-  analogWrite(buzzerPin, val);
+void playNote(int noteFrequency) {
+  tone(buzzerPin, noteFrequency, SHORT);
   delay(SHORT);
-  analogWrite(buzzerPin, 0);
-  delay(50);
 }
 
 void loop() {

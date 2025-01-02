@@ -5,20 +5,24 @@ void setup() {
   pinMode(buzzerPin, OUTPUT);
 }
 
-const int DO = 261;
-const int RE = 294;
-const int MI = 331;
-const int FA = 348;
-const int SOL = 392;
-const int LA = 441;
-const int SI = 496;
+const int DO = 1910;
+const int RE = 1695;
+const int MI = 1505;
+const int FA = 1430;
+const int SOL = 1270;
+const int LA = 1130;
+const int SI = 1005;
 
 const int SHORT = 250;
 
-void playNote(int val) {
-  analogWrite(buzzerPin, val);
-  delay(SHORT);
-  analogWrite(buzzerPin, 0);
+void playNote(int noteFrequencyInUs) {
+  unsigned long startTime = millis();
+  while(millis() - startTime < SHORT) {
+    digitalWrite(buzzerPin, HIGH);
+    delayMicroseconds(noteFrequencyInUs);
+    digitalWrite(buzzerPin, LOW);
+    delayMicroseconds(noteFrequencyInUs);
+  }
   delay(50);
 }
 

@@ -1,7 +1,7 @@
 //www.elegoo.com
 //2016.12.08
 /*****************************************/
-const int ledPin = 13;//the led attach to
+const int ledPin = 4;//the led attach to
 
 void setup()
 { 

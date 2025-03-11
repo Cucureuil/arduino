@@ -1,64 +1,49 @@
-//www.elegoo.com
-//2018.10.25
-
-
-#include <dht_nonblocking.h>
-#define DHT_SENSOR_TYPE DHT_TYPE_11
-
-static const int DHT_SENSOR_PIN = 2;
-DHT_nonblocking dht_sensor( DHT_SENSOR_PIN, DHT_SENSOR_TYPE );
-
-
-
-/*
- * Initialize the serial port.
+/**
+ * DHT11 Sensor Reader
+ * This sketch reads temperature and humidity data from the DHT11 sensor and prints the values to the serial port.
+ * It also handles potential error states that might occur during reading.
+ *
+ * Author: Dhruba Saha
+ * Version: 2.1.0
+ * License: MIT
  */
-void setup( )
-{
-  Serial.begin( 9600);
+
+// Include the DHT11 library for interfacing with the sensor.
+#include <DHT11.h>
+
+// Create an instance of the DHT11 class.
+// - For Arduino: Connect the sensor to Digital I/O Pin 2.
+// - For ESP32: Connect the sensor to pin GPIO2 or P2.
+// - For ESP8266: Connect the sensor to GPIO2 or D4.
+DHT11 dht11(2);
+
+void setup() {
+    // Initialize serial communication to allow debugging and data readout.
+    // Using a baud rate of 9600 bps.
+    Serial.begin(9600);
+    
+    // Uncomment the line below to set a custom delay between sensor readings (in milliseconds).
+    // dht11.setDelay(500); // Set this to the desired delay. Default is 500ms.
 }
 
+void loop() {
+    int temperature = 0;
+    int humidity = 0;
 
+    // Attempt to read the temperature and humidity values from the DHT11 sensor.
+    int result = dht11.readTemperatureHumidity(temperature, humidity);
 
-/*
- * Poll for a measurement, keeping the state machine alive.  Returns
- * true if a measurement is available.
- */
-static bool measure_environment( float *temperature, float *humidity )
-{
-  static unsigned long measurement_timestamp = millis( );
-
-  /* Measure once every four seconds. */
-  if( millis( ) - measurement_timestamp > 3000ul )
-  {
-    if( dht_sensor.measure( temperature, humidity ) == true )
-    {
-      measurement_timestamp = millis( );
-      return( true );
+    // Check the results of the readings.
+    // If the reading is successful, print the temperature and humidity values.
+    // If there are errors, print the appropriate error messages.
+    if (result == 0) {
+        Serial.print("Temperature: ");
+        Serial.print(temperature);
+        Serial.print(" °C\tHumidity: ");
+        Serial.print(humidity);
+        Serial.println(" %");
+    } else {
+        // Print error message based on the error code.
+        Serial.println(DHT11::getErrorString(result));
     }
-  }
-
-  return( false );
-}
-
-
-
-/*
- * Main program loop.
- */
-void loop( )
-{
-  float temperature;
-  float humidity;
-
-  /* Measure temperature and humidity.  If the functions returns
-     true, then a measurement is available. */
-  if( measure_environment( &temperature, &humidity ) == true )
-  {
-    Serial.print( "T = " );
-    Serial.print( temperature, 1 );
-    Serial.print( " deg. C, H = " );
-    Serial.print( humidity, 1 );
-    Serial.println( "%" );
-  }
 }

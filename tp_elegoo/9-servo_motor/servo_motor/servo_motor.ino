@@ -12,7 +12,7 @@ void setup() {
 
 void loop() {
   for (int i=0;i<=180;i++) {
-    myServo.write(i);f:\projet-arduino\arduino\tp_elegoo\12-IR_receiver\12-IR_receiver.ino
+    myServo.write(i);
     delay(5);
   }
    for (int i=180;i>=0;i--) {
